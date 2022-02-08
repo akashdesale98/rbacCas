@@ -10,4 +10,9 @@ type Members struct {
 }
 
 type User struct {
+	Username  string `db:"username" json:"username"`
+	Password  string `db:"password" json:"password"`
+	Name      string `db:"name" json:"name"`
+	Privilage string `db:"privilage" json:"privilage"`
+	Id        int    `db:"id" json:"id"`
 }

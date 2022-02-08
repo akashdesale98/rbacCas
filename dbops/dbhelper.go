@@ -54,9 +54,9 @@ func CheckAdmin() int {
 	return n
 }
 
-func CheckUser(user_id string) int {
+func CheckUser(username string) int {
 	var n int
-	query := `SELECT count(*) FROM members where username = ` + `'` + user_id + `'`
+	query := `SELECT count(*) FROM members where username = ` + `'` + username + `'`
 	err := db.Get(&n, query)
 	if err != nil {
 		a := fmt.Sprintf("Scan() err = %v; want nil", err)
@@ -64,6 +64,21 @@ func CheckUser(user_id string) int {
 		return -1
 	}
 	return n
+}
+
+func CheckCoStaff(member models.Members) bool {
+	n := models.User{}
+	query := `SELECT * FROM members where username = ` + `'` + member.Username + `'`
+	err := db.Get(&n, query)
+	if err != nil {
+		a := fmt.Sprintf("Scan() err = %v; want nil", err)
+		fmt.Println("a::", a)
+		return false
+	}
+	if n.Privilage == "owner" {
+		return false
+	}
+	return true
 }
 
 func InsertUser(mem *models.Members) (int, error) {
@@ -83,7 +98,7 @@ func InsertUser(mem *models.Members) (int, error) {
 }
 
 func DeleteUser(userid string) (int, error) {
-	res, err := db.Exec(`DELETE * FROM members where username='$1';`, userid)
+	res, err := db.Exec(`DELETE * FROM members where username = $1;`, userid)
 	if err != nil {
 		log.Println("error saving member: ", err)
 		return 0, err
@@ -97,7 +112,7 @@ func DeleteUser(userid string) (int, error) {
 }
 
 func ChangeRole(mem *models.Members) (int, error) {
-	res, err := db.Exec(`UPDATE members SET privilage = '$1' WHERE username = '$2';`, mem.Privilage, mem.Username)
+	res, err := db.Exec(`UPDATE members SET privilage = $1 WHERE username = $2;`, mem.Privilage, mem.Username)
 	if err != nil {
 		log.Println("error saving member: ", err)
 		return 0, err
