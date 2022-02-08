@@ -34,3 +34,9 @@ ADD
 ```
 
 
+1. Run the Project
+```
+    go mod tidy
+    go run main.go
+```
+
