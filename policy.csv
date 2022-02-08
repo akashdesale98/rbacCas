@@ -1,0 +1,4 @@
+p, owner, /owner/viewEscrows, (GET)|(POST)
+p, manager, /manager/createPaymentsLinks, (GET)|(POST)
+
+g, owner, manager
